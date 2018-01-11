@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width= device-width, initial-scale=1">
+	<title></title>
+	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="bootstrap-3.3.7-dist/css/bootstrap-theme.css">
+	<link rel="stylesheet" type="text/css" href="css/myStyle.css">
+	<!--Librerias js-->
+	<script type="text/javascript" src="js/jquery-3.2.1.min.js"></script>
+	<script type="text/javascript" src="js/underscore.js"></script>
+	<script type="text/javascript" src="js/backbone.js"></script>	
+	<script type="text/javascript"  src="js/backbone.localStorage.js"></script>
+	<script type="text/javascript" src="bootstrap-3.3.7-dist/js/bootstrap.js"></script>
+	
+</head>
+<body>
+	<div class="container" id="contenedorVistas"></div>
+
+	<script type="text/template" id="plantillaInicio">
+		<form>
+			<legend>CRM</legend>
+			<div class="form-group">
+				<button id="btnVistaRegistrarClientes" class="btn btn-success">Registrar Clientes</button>
+				<button id="btnVistaListadoClientes" class="btn btn-success">Listar Clientes</button>
+			</div>
+		</form>
+	</script>
+
+	<script type="text/template" id="plantillaRegistroCliente">
+		<form class="form-horizontal">
+			<legend>Registrar Cliente</legend>
+			<div class="form-group">
+				<label class="control-label col-lg-2 col-md-2 col-sm-2" for="id">Identificación:</label>
+				<div class="col-lg-10 col-md-10 col-sm-10">
+					<input type="text" id="id" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2 col-md-2 col-sm-2" for="nombre">Nombre:</label>
+				<div class="col-lg-10 col-md-10 col-sm-10">
+					<input type="text" id="nombre" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2 col-md-2 col-sm-2" for="apellido">Apellido:</label>
+				<div class="col-lg-10 col-md-10 col-sm-10">
+					<input type="text" id="apellido" class="form-control">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2 col-md-2 col-sm-2" for="edad">Edad:</label>
+				<div class="col-lg-10 col-md-10 col-sm-10">
+					<input type="text" id="edad" class="form-control" placeholder="+18">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2 col-md-2 col-sm-2" for="telefono">Telefono:</label>
+				<div class="col-lg-10 col-md-10 col-sm-10">
+					<input type="text" id="telefono" class="form-control" placeholder="+57">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2 col-md-2 col-sm-2" for="email">Email:</label>
+				<div class="col-lg-10 col-md-10 col-sm-10">
+					<input type="text" id="email" class="form-control" placeholder="domain@.com">
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-2 col-lg-10 col-md-offset-2 col-md-10 col-sm-offset-2 col-sm-10">
+					<button id="btnRegistrarCliente" class="btn btn-success">Registrar</button>
+					<button type="reset" class="btn btn-danger">Cancelar</button>
+					<button id="btnSalir" class="btn btn-default">Salir</button>
+				</div>
+			</div>
+		</form>
+	</script>
+
+	<script type="text/template" id="planillaListadoClientes">
+		<form>
+			<legend>Listado Clientes</legend>
+			<table class="table table-hover">
+				<thead>
+					<tr>
+						<th>Identificacion</th>
+						<th>Nombre</th>
+						<th>Apellido</th>
+						<th>Detalles</th>
+						<th>Eliminar</th>
+					</tr>
+				</thead>
+				<tbody id="listaClientes"></tbody>
+			</table>
+			<div class="form-group">
+				<button id="btnSalir" class="btn btn-default">Salir</button>
+			</div>
+		</form>
+	</script>
+
+	<div class="modal fade" id="modalMostrarDetalleCliente" tabindex="-1" role="dialog"  aria-hidden="true">
+  		<div class="modal-dialog">
+    		<div class="modal-content">
+      			<div class="modal-header">
+        			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        			<h4 class="modal-title" id="myModalLabel">Detalle Cliente</h4>
+      			</div>
+	      		<div class="modal-body">
+	           		<form class="form-horizontal">
+	           			<div class="form-group">
+							<label class="control-label col-lg-2 col-md-2 col-sm-2" for="detalleId">Identificación:</label>
+							<div class="col-lg-10 col-md-10 col-sm-10">
+								<input type="text" id="detalleId" class="form-control" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-lg-2 col-md-2 col-sm-2" for="detalleNombre">Nombre:</label>
+							<div class="col-lg-10 col-md-10 col-sm-10">
+								<input type="text" id="detalleNombre" class="form-control" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-lg-2 col-md-2 col-sm-2" for="detalleApellido">Apellido:</label>
+							<div class="col-lg-10 col-md-10 col-sm-10">
+								<input type="text" id="detalleApellido" class="form-control" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-lg-2 col-md-2 col-sm-2" for="detalleEdad">Edad:</label>
+							<div class="col-lg-10 col-md-10 col-sm-10">
+								<input type="text" id="detalleEdad" class="form-control" placeholder="+18" readonly>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label col-lg-2 col-md-2 col-sm-2" for="detalleTelefono">Telefono:</label>
+							<div class="col-lg-10 col-md-10 col-sm-10">
+								<input type="text" id="detalleTelefono" class="form-control" placeholder="+57" readonly>
+							</div>
+						</div>
+	        		</form>
+	      		</div>
+	      		<div class="modal-footer">
+	        		<button type="button" class="btn btn-danger" data-dismiss="modal">Cerrar</button>
+	      		</div>
+    		</div>
+  		</div>
+	</div>
+
+	<!--Archivos Externos para el funcionamiento de la app deben ponerse siempre en el body-->
+	<script type="text/javascript" src="js/models.js"></script>
+	<script type="text/javascript" src="js/collections.js"></script>
+	<script type="text/javascript" src="js/views.js"></script>
+	<script type="text/javascript" src="js/router.js"></script>
+	<script type="text/javascript" src="js/app.js"></script>
+</body>
+</html>
